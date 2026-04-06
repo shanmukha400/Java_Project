@@ -80,7 +80,7 @@ public class AdminPortal implements IAdminAuth {
         if (rows > 0) {
             System.out.println(" Registered & Activated Successfully!");
         } else {
-            System.out.println(" Error: Invalid ID or already activated.");
+            System.out.println(" Error: Invalid ID or not activated.");
         }
     } catch (SQLException e) {
         System.out.println(" Database issue: " + e.getMessage());

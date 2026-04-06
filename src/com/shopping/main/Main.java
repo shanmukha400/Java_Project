@@ -24,8 +24,8 @@ public class Main {
             System.out.println("\n***********************************************************");
             System.out.println("           ONLINE SHOPPING CART SYSTEM - MAIN MENU");
             System.out.println("***********************************************************");
-            System.out.println("1.   ADMIN PORTAL (Manage Products & Orders)");
-            System.out.println("2.   USER PORTAL (Shop & View Profile)");
+            System.out.println("1.   ADMIN PORTAL ");
+            System.out.println("2.   USER PORTAL");
             System.out.println("0.   EXIT");
             System.out.println("***********************************************************");
             System.out.print(" Select Portal: ");

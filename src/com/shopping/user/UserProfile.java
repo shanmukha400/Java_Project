@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class UserProfile {
 
-    // Method ni define chesa - deeniki Scanner mariyu Email pass cheyali
     public void viewAndEditProfile(Scanner sc, String email) {
     try (Connection con = DBConnection.getConnection()) {
         String sql = "SELECT * FROM users WHERE email = ?";
@@ -22,7 +21,7 @@ public class UserProfile {
                     String dbPhone = rs.getString("phone");
                     String dbAddress = rs.getString("address");
 
-                    System.out.println("\n👤 ======= [ YOUR PROFILE ] ======= 👤");
+                    System.out.println("\n ======= [ YOUR PROFILE ] ======= ");
                     System.out.println("Username     : " + dbUser);
                     System.out.println("Email        : " + email);
                     System.out.println("Gender       : " + (dbGender == null ? "Not Set" : dbGender));
@@ -60,7 +59,6 @@ public class UserProfile {
                             }
                         }
 
-                        // Address Edit
                         System.out.print("New Address [" + (dbAddress == null ? "" : dbAddress) + "]: ");
                         String inputAddr = sc.nextLine().trim();
                         String finalAddr = inputAddr.isEmpty() ? dbAddress : inputAddr;

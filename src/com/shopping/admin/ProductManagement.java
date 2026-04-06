@@ -135,7 +135,7 @@ public class ProductManagement {
         }
         else {
             dynamicCols.put("Material", "material");
-            dynamicCols.put("Color", "top_color");
+            dynamicCols.put("Color", "color");
             dynamicCols.put("Warranty", "warranty_period");
         }
 
@@ -153,7 +153,7 @@ public class ProductManagement {
             ps.setInt(i, pId);
             ps.executeUpdate();
             System.out.println("\n All Specifications updated correctly!");
-            if (sc.hasNextLine()) sc.nextLine();
+            
         }
     }
 
@@ -223,6 +223,7 @@ public class ProductManagement {
                 System.out.println("\n=================  FULL SPECIFICATIONS =================");
                 System.out.println("PRODUCT  : " + rs.getString("product_name").toUpperCase());
                 System.out.println("BRAND    : " + rs.getString("brand"));
+                System.out.println("COLOUR   : " + rs.getString("color"));
                 System.out.println("---------------------------------------------------------");
 
                 List<String> displayCols = new ArrayList<>();
@@ -244,7 +245,7 @@ public class ProductManagement {
                     displayCols.addAll(Arrays.asList("material", "dimensions", "capacity", "power_consumption", "warranty_period", "color", "origin"));
                 }
                 else {
-                    displayCols.addAll(Arrays.asList("material", "top_color", "warranty_period", "origin"));
+                    displayCols.addAll(Arrays.asList("material", "color", "warranty_period", "origin"));
                 }
 
                 // Filtering: Only display columns that exist in the above lists AND have values in DB
@@ -303,54 +304,50 @@ public class ProductManagement {
         ResultSet rs = con.createStatement().executeQuery("SELECT category_name FROM categories WHERE id=" + id);
         return rs.next() ? rs.getString(1) : "";
     }
-
-    private void updateProductDetails(Scanner sc, Connection con) throws SQLException {
+private void updateProductDetails(Scanner sc, Connection con) throws SQLException {
     System.out.print(" Enter Product ID to Update: ");
     int id = Integer.parseInt(sc.nextLine());
 
-    // Mundu aa product database lo undo ledo check chesthunnam
-    String checkSql = "SELECT price, stock, discount, color, size FROM product WHERE product_id = ?";
+    // 1. SELECT query lo product_name kuda add chesam
+    String checkSql = "SELECT product_name, price, stock, discount, color, size FROM product WHERE product_id = ?";
     try (PreparedStatement psCheck = con.prepareStatement(checkSql)) {
         psCheck.setInt(1, id);
         ResultSet rs = psCheck.executeQuery();
 
         if (rs.next()) {
-            System.out.println("\n--- Current Details Found. Enter New Values (or press Enter to keep current) ---");
+            // Product ID enter cheyagane Name display avthundi
+            System.out.println("--- Current Details Found. Enter New Values (or press Enter to keep current) ---");
+            System.out.println("\nProduct: " + rs.getString("product_name"));
 
             // 1. New Price
             System.out.print("New Price [" + rs.getDouble("price") + "]: ");
             String priceStr = sc.nextLine().trim();
-            if (!priceStr.isEmpty()) {
-                updateField(con, "price", priceStr, id);
-            }
+            if (!priceStr.isEmpty()) updateField(con, "price", priceStr, id);
 
             // 2. New Stock
             System.out.print("New Stock [" + rs.getInt("stock") + "]: ");
             String stockStr = sc.nextLine().trim();
-            if (!stockStr.isEmpty()) {
-                updateField(con, "stock", stockStr, id);
-            }
+            if (!stockStr.isEmpty()) updateField(con, "stock", stockStr, id);
 
             // 3. New Discount
             System.out.print("New Discount % [" + rs.getDouble("discount") + "]: ");
             String discStr = sc.nextLine().trim();
-            if (!discStr.isEmpty()) {
-                updateField(con, "discount", discStr, id);
-            }
+            if (!discStr.isEmpty()) updateField(con, "discount", discStr, id);
 
-            // 4. New Color
-            System.out.print("New Color [" + rs.getString("color") + "]: ");
+            // 4. New Color (Append Logic)
+            String currentColors = rs.getString("color");
+            System.out.print("New Color [" + currentColors + "]: ");
             String colorStr = sc.nextLine().trim();
             if (!colorStr.isEmpty()) {
-                updateField(con, "color", "'" + colorStr + "'", id);
+                // Patha colors ki kotha color add chesthunnam
+                String updatedColors = currentColors + ", " + colorStr;
+                updateField(con, "color", "'" + updatedColors + "'", id);
             }
 
             // 5. New Size
             System.out.print("New Size [" + rs.getString("size") + "]: ");
             String sizeStr = sc.nextLine().trim();
-            if (!sizeStr.isEmpty()) {
-                updateField(con, "size", "'" + sizeStr + "'", id);
-            }
+            if (!sizeStr.isEmpty()) updateField(con, "size", "'" + sizeStr + "'", id);
 
             System.out.println("\n Product details updated successfully!");
         } else {
@@ -358,7 +355,6 @@ public class ProductManagement {
         }
     }
 }
-
 // Helper method code ni neat ga ఉంచడానికి
 private void updateField(Connection con, String column, String value, int id) throws SQLException {
     String sql = "UPDATE product SET " + column + " = " + value + " WHERE product_id = " + id;
@@ -372,7 +368,7 @@ private void updateField(Connection con, String column, String value, int id) th
     System.out.println("1. Remove Category/Sub-Category");
     System.out.println("2. Remove Product(s)");
     System.out.println("0. Back");
-    System.out.print(" Choice: ");
+    System.out.print("Select  Choice: ");
     
     int ch = Integer.parseInt(sc.nextLine());
     if (ch == 0) return;
@@ -420,12 +416,15 @@ private void handleCategoryRemoval(Scanner sc, Connection con) throws SQLExcepti
     System.out.println("1. Delete this Main Category\n2. Delete a Sub-Category under it");
     int type = Integer.parseInt(sc.nextLine());
     
+    
     if (type == 1) {
+        System.out.println("Select choice :");
         con.createStatement().executeUpdate("DELETE FROM categories WHERE id = " + mId);
         System.out.println(" Main Category Removed!");
     } else {
         int sId = selectFrom(con, mId, "Sub-Category");
         if (sId != -1) {
+            System.out.println("Select choice :");
             con.createStatement().executeUpdate("DELETE FROM categories WHERE id = " + sId);
             System.out.println(" Sub-Category Removed!");
         }

@@ -89,13 +89,13 @@ private void displayUsersTable() {
                 int rows = ps.executeUpdate();
                 
                 if (rows > 0) {
-                    System.out.println("✅ SUCCESS: '" + targetEmail + "' removed!");
+                    System.out.println(" SUCCESS: '" + targetEmail + "' removed!");
                     totalRemoved++;
                 } else {
-                    System.out.println("❌ FAILED: No user found with '" + targetEmail + "'.");
+                    System.out.println(" FAILED: No user found with '" + targetEmail + "'.");
                 }
             }
-            System.out.println("\n📊 TOTAL SUMMARY: " + totalRemoved + " user(s) successfully removed.");
+            System.out.println("\n TOTAL SUMMARY: " + totalRemoved + " user(s) successfully removed.");
             
         } catch (SQLException e) { 
             System.out.println("Database Error: " + e.getMessage()); 
@@ -151,7 +151,7 @@ public void viewAllReviews(Connection con) {
         printLine('=', 115);
 
     } catch (SQLException e) {
-        System.out.println("❌ Database Error: " + e.getMessage());
+        System.out.println(" Database Error: " + e.getMessage());
     }
 }
 

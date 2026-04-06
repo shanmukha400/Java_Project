@@ -19,7 +19,7 @@ public class AdminDashboard {
 
             if (userRole.equals("SUPER_ADMIN") || userRole.equals("PRODUCT_MANAGER")) {
                 System.out.println("1. Product Management");
-                System.out.println("2. Discount Management (Coupons)");
+                System.out.println("2. Discount Management");
             }
 
             if (userRole.equals("SUPER_ADMIN") || userRole.equals("USER_MANAGER")) {
@@ -37,7 +37,7 @@ public class AdminDashboard {
             }
 
             if (userRole.equals("SUPER_ADMIN")) {
-                System.out.println("7. Admin Controls (Role & Task Assignment)");
+                System.out.println("7. Admin Controls");
             }
 
             System.out.println("0. Logout");

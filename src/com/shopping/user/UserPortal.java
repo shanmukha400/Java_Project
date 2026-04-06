@@ -19,7 +19,7 @@ public class UserPortal {
             System.out.println("3. Forgot Password");
             System.out.println("4. Change Password");
             System.out.println("0. Exit");
-            System.out.print("Enter  Choice: ");
+            System.out.print("Enter Choice: ");
 
             String choiceStr = sc.nextLine().trim();
             if (choiceStr.isEmpty()) continue;
@@ -57,8 +57,12 @@ public class UserPortal {
         System.out.println("\n--- LOGIN ---");
         System.out.print(" Enter Email: ");
         String loginEmail = sc.nextLine().trim();
+        
+        // Hidden Password Logic for VS Code
         System.out.print(" Enter Password: ");
         String pass = sc.nextLine().trim();
+        System.out.print("\033[1A\033[2K"); // Clear the password line
+        System.out.println(" Enter Password: [PROTECTED]");
 
         String sql = "SELECT username FROM users WHERE email = ? AND password = ?";
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -81,12 +85,27 @@ public class UserPortal {
 
     private void userSignUp(Scanner sc, Connection con) {
         System.out.println("\n--- SIGN UP ---");
-        System.out.print("👤 Username: ");
+        System.out.print(" Username: ");
         String uname = sc.nextLine().trim();
-        System.out.print(" Email: ");
-        String mail = sc.nextLine().trim();
+
+        // Email Validation
+        String mail;
+        while (true) {
+            System.out.print(" Enter Email (eg: @gmail.com): ");
+            mail = sc.nextLine().trim();
+            if (mail.toLowerCase().endsWith("@gmail.com") && mail.length() > 10) {
+                break; 
+            } else {
+                System.out.println(" Invalid Email! Please use a valid address ending with @gmail.com");
+            }
+        }
+
+        // Hidden Password Logic
         System.out.print(" Password: ");
         String pass = sc.nextLine().trim();
+        System.out.print("\033[1A\033[2K");
+        System.out.println(" Password: [PROTECTED]");
+
         System.out.print(" Gender (M/F): ");
         String gender = sc.nextLine().trim();
         System.out.print(" Phone: ");
@@ -104,7 +123,7 @@ public class UserPortal {
             pst.setString(6, address);
 
             if (pst.executeUpdate() > 0) {
-                System.out.println("\n🎉 Sign Up Success! Please login.");
+                System.out.println("\n Sign Up Success! Please login.");
             }
         } catch (SQLException e) {
             System.out.println(" Sign Up Failed: " + e.getMessage());
@@ -119,19 +138,25 @@ public class UserPortal {
             pst.setString(1, mail);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                System.out.println("💡 Your Password: " + rs.getString("password"));
+                System.out.println(" Your Password: " + rs.getString("password"));
             } else {
-                System.out.println("❌ Email not found!");
+                System.out.println(" Email not found!");
             }
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
     public void changePassword(Scanner sc, Connection con, String mail) {
         System.out.println("\n--- CHANGE PASSWORD ---");
+        
         System.out.print(" Current Password: ");
         String oldPass = sc.nextLine().trim();
+        System.out.print("\033[1A\033[2K");
+        System.out.println(" Current Password: [PROTECTED]");
+
         System.out.print(" New Password: ");
         String newPass = sc.nextLine().trim();
+        System.out.print("\033[1A\033[2K");
+        System.out.println(" New Password: [PROTECTED]");
 
         String sql = "UPDATE users SET password = ? WHERE email = ? AND password = ?";
         try (PreparedStatement pst = con.prepareStatement(sql)) {

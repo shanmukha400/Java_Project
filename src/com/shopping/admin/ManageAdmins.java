@@ -13,8 +13,8 @@ public class ManageAdmins {
         System.out.print("Enter New Admin ID: ");
         String adminId = sc.nextLine().trim();
         
-        System.out.println("Assign Role: PRODUCT_MANAGER, ORDER_MANAGER, USER_MANAGER, SUPER_ADMIN");
-        System.out.print("Select Role: ");
+        System.out.println("Assign Role: ");
+        
         String role = sc.nextLine().toUpperCase().trim();
 
        
